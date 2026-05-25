@@ -1,0 +1,50 @@
+# --- General ---
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+# --- Frontend (Node.js / React / Vite) ---
+Frontend/node_modules/
+Frontend/dist/
+Frontend/build/
+Frontend/.eslintcache
+Frontend/*.tsbuildinfo
+
+# --- Backend (.NET / C#) ---
+# Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.rsuser
+
+# Publish
+publish/
+*.publish.xml
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+
+# Backend paths
+Backend/**/bin/
+Backend/**/obj/
+Backend/**/App_Data/
+Backend/**/ClientApp/dist/
+Backend/**/Generated\ Files/
+Backend/**/*.user
+Backend/**/*.userosscache
+Backend/**/*.sln.docstates
+Backend/**/*.suo
+
+# Database
+*.db
+*.sqlite
+Backend/**/appsettings.Development.json
+
