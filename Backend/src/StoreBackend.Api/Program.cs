@@ -10,7 +10,11 @@ using StoreBackend.Infrastructure;
 using StoreBackend.Infrastructure.Repositories;
 using StoreBackend.Api.Filters;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    WebRootPath = "Images"
+});
 
 builder.Services.AddControllers(options =>
 {
@@ -91,12 +95,15 @@ builder.Services.AddScoped<IUserFacade, UserFacade>();
 builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
 
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseRateLimiter();
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import authHero from "../assets/auth-hero.png";
 import { useAuth } from "../context/AuthContext";
+import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 
 const AuthLogin: React.FC = () => {
@@ -40,7 +41,7 @@ const AuthLogin: React.FC = () => {
             </span>
           </div>
           <div className="max-w-xl text-left">
-            <h1 className="text-4xl font-extrabold leading-tight mb-6">
+            <h1 className="text-4xl font-extrabold leading-tight mb-6 font-headline-xl">
               Descubre un mundo de exclusividad.
             </h1>
             <p className="text-base text-white/90 font-medium leading-relaxed">
@@ -54,7 +55,7 @@ const AuthLogin: React.FC = () => {
         <div className="w-full max-w-[480px]">
           <button
             onClick={() => navigate("/welcome")}
-            className="flex items-center gap-2 text-stone-500 hover:text-[#E2725B] transition-colors mb-8 group"
+            className="flex items-center gap-2 text-stone-500 hover:text-[#E2725B] transition-colors mb-8 group cursor-pointer"
           >
             <span className="material-symbols-outlined transition-transform group-hover:-translate-x-1">
               arrow_back
@@ -88,30 +89,33 @@ const AuthLogin: React.FC = () => {
           <div className="flex p-1 bg-stone-100 rounded-2xl mb-10 relative">
             <button
               onClick={() => setActiveTab("login")}
-              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 ${activeTab === "login"
-                ? "text-stone-900"
-                : "text-stone-500 hover:text-stone-700"
-                }`}
+              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 cursor-pointer ${
+                activeTab === "login"
+                  ? "text-stone-900"
+                  : "text-stone-500 hover:text-stone-700"
+              }`}
             >
               Iniciar Sesión
             </button>
             <button
               onClick={() => setActiveTab("register")}
-              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 ${activeTab === "register"
-                ? "text-stone-900"
-                : "text-stone-500 hover:text-stone-700"
-                }`}
+              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 cursor-pointer ${
+                activeTab === "register"
+                  ? "text-stone-900"
+                  : "text-stone-500 hover:text-stone-700"
+              }`}
             >
               Registrarse
             </button>
             <div
-              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-xl shadow-sm transition-all duration-300 ease-out ${activeTab === "login" ? "left-1" : "left-[calc(50%+2px)]"
-                }`}
+              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-xl shadow-sm transition-all duration-300 ease-out ${
+                activeTab === "login" ? "left-1" : "left-[calc(50%+2px)]"
+              }`}
             />
           </div>
 
           {activeTab === "login" ? (
-            <></>
+            <LoginForm onSuccess={handleAuthSuccess} />
           ) : (
             <RegisterForm onSuccess={handleAuthSuccess} />
           )}

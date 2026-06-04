@@ -38,16 +38,25 @@ async function parseErrorMessage(response: Response): Promise<string> {
   }
 }
 
-export function getAuthHeader(): Record<string, string> {
-  const user = localStorage.getItem("user");
-  if (!user) return {};
-  try {
-    const parsed: User = JSON.parse(user);
-    return parsed.token ? { Authorization: `Bearer ${parsed.token}` } : {};
-  } catch {
-    return {};
+export const loginUser = async (loginData: {
+  email: string;
+  password: string;
+}): Promise<User> => {
+  const response = await fetch(`${config.api.url}/api/authorization/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(loginData),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const message = await parseErrorMessage(response);
+    throw new Error(message || "Error al iniciar sesión");
   }
-}
+
+  const data: AuthApiResponse = await response.json();
+  return mapAuthResponse(data);
+};
 
 export const registerUser = async (signUpData: {
   name: string;
@@ -68,8 +77,4 @@ export const registerUser = async (signUpData: {
 
   const data: AuthApiResponse = await response.json();
   return mapAuthResponse(data);
-};
-
-export const logoutUser = (): void => {
-  localStorage.removeItem("user");
 };

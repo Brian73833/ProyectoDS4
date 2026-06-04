@@ -26,4 +26,13 @@ public class UserMapper
             Password = model.Password
         };
     }
+
+    public static LoginUserDto ToDto(LoginRequestModel model)
+    {
+        return new LoginUserDto
+        {
+            Email = model.Email,
+            Password = model.Password
+        };
+    }
 }

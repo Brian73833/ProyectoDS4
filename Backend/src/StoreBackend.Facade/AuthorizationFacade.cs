@@ -23,7 +23,8 @@ public class AuthorizationFacade : IAuthorizationFacade
     }
 
     public async Task<AuthorizationResponseDto> AuthorizeAsync(LoginUserDto requestDto)
-    {        var user = await userService.LoginAsync(requestDto).ConfigureAwait(false);
+    {
+        var user = await userService.LoginAsync(requestDto).ConfigureAwait(false);
 
         if (user == null)
         {

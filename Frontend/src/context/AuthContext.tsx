@@ -5,7 +5,7 @@ import React, {
   useEffect,
   type ReactNode,
 } from "react";
-import type { User } from "../models/responses/User.ts";
+import type { User } from "../models/responses/User";
 
 interface AuthContextType {
   user: User | null;
@@ -23,6 +23,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -38,7 +39,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = (userData: User) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    const { token, ...userWithoutToken } = userData;
+    void token;
+    localStorage.setItem("user", JSON.stringify(userWithoutToken));
   };
 
   const logout = () => {
