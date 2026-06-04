@@ -1,0 +1,25 @@
+using StoreBackend.DomainService;
+using StoreBackend.Dto;
+using StoreBackend.Facade.Mappers;
+using StoreBackend.Infrastructure;
+
+namespace StoreBackend.Facade;
+
+public class UserFacade : IUserFacade
+{
+    private readonly IUserService _userService;
+    private readonly AppDbContext _context;
+
+    public UserFacade(IUserService userService, AppDbContext context)
+    {
+        _userService = userService;
+        _context = context;
+    }
+
+    public async Task<UserDto> CreateAsync(CreateUserDto userDto)
+    {
+        var createdUser = await _userService.CreateAsync(userDto);
+        await _context.SaveChangesAsync();
+        return UserMapper.ToDto(createdUser);
+    }
+}
