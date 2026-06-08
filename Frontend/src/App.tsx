@@ -1,9 +1,33 @@
-function App() {
-  return (
-    <>
-      <h1>Vite + React</h1>
-    </>
-  )
-}
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import AuthLogin from "./pages/AuthLogin";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import Welcome from "./pages/Welcome";
+import ProductDetails from "./pages/ProductDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
-export default App
+export default function App() {
+  const location = useLocation();
+  const hideHeaderFooter = ["/auth"].includes(location.pathname);
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {!hideHeaderFooter && <Header />}
+      <div className="flex-1">
+        <Routes>
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/auth" element={<AuthLogin />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/welcome" replace />} />
+        </Routes>
+      </div>
+      {!hideHeaderFooter && <Footer />}
+    </div>
+  );
+}
