@@ -72,17 +72,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   };
 
   const inputClass = (hasError: boolean) =>
-    `w-full pl-12 pr-4 py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${
-      hasError
-        ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
-        : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
+    `w-full pl-12 pr-4 py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${hasError
+      ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
+      : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
     }`;
 
   const inputClassPassword = (hasError: boolean) =>
-    `w-full pl-12 pr-12 py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${
-      hasError
-        ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
-        : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
+    `w-full pl-12 pr-12 py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${hasError
+      ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
+      : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
     }`;
 
   return (

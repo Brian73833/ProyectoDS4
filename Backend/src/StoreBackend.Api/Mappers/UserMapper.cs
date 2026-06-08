@@ -41,7 +41,9 @@ public class UserMapper
         return new UpdateUserDto
         {
             Name = model.Name,
-            Email = model.Email
+            Email = model.Email,
+            CurrentPassword = model.CurrentPassword,
+            NewPassword = model.NewPassword
         };
     }
 }

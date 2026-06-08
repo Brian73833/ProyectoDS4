@@ -12,4 +12,8 @@ public class UpdateUserRequestModel
     [EmailAddress]
     [StringLength(100)]
     public string Email { get; set; } = string.Empty;
+
+    public string? CurrentPassword { get; set; }
+
+    public string? NewPassword { get; set; }
 }

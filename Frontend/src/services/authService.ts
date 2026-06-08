@@ -95,6 +95,8 @@ export const updateUser = async (
   updateData: {
     name: string;
     email: string;
+    currentPassword?: string;
+    newPassword?: string;
   },
 ): Promise<User> => {
   const response = await fetch(`${config.api.url}/api/users/${resourceId}`, {

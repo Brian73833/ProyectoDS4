@@ -75,6 +75,21 @@ public class UserService : IUserService
         user.Name = userDto.Name;
         user.Email = userDto.Email;
 
+        if (!string.IsNullOrEmpty(userDto.NewPassword))
+        {
+            if (string.IsNullOrEmpty(userDto.CurrentPassword))
+            {
+                throw new BadRequestResponseException("Current password is required to change password");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userDto.CurrentPassword, user.PasswordHash))
+            {
+                throw new BadRequestResponseException("Current password is incorrect");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.NewPassword);
+        }
+
         return await _userRepository.UpdateAsync(user);
     }
 }

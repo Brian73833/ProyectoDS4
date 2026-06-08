@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { updateUser } from "../services/authService";
+import { getPasswordStrength } from "../lib/utils";
+import ChangePasswordForm from "../components/ChangePasswordForm";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -10,18 +12,28 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [shouldChangePassword, setShouldChangePassword] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
+
+  const passwordStrength = getPasswordStrength(formData.newPassword);
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         name: user.name,
         email: user.email,
-      });
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      }));
     }
   }, [user]);
 
@@ -35,12 +47,17 @@ export default function Profile() {
   const handleEditToggle = () => {
     if (isEditing) {
       if (user) {
-        setFormData({
+        setFormData((prev) => ({
+          ...prev,
           name: user.name,
           email: user.email,
-        });
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        }));
       }
       setIsEditing(false);
+      setShouldChangePassword(false);
       setError(null);
       setSuccess(null);
     } else {
@@ -57,6 +74,21 @@ export default function Profile() {
 
     if (!user) return;
 
+    if (shouldChangePassword) {
+      if (!formData.currentPassword) {
+        setError("Debes ingresar tu contraseña actual para cambiarla");
+        return;
+      }
+      if (formData.newPassword !== formData.confirmPassword) {
+        setError("Las contraseñas nuevas no coinciden");
+        return;
+      }
+      if (formData.newPassword.length < 8) {
+        setError("La nueva contraseña debe tener al menos 8 caracteres");
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -65,11 +97,22 @@ export default function Profile() {
       const updatedUser = await updateUser(user.userResourceId, {
         name: formData.name,
         email: formData.email,
+        currentPassword: shouldChangePassword
+          ? formData.currentPassword
+          : undefined,
+        newPassword: shouldChangePassword ? formData.newPassword : undefined,
       });
 
       login(updatedUser);
       setSuccess("Información actualizada correctamente");
       setIsEditing(false);
+      setShouldChangePassword(false);
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      }));
     } catch (err: any) {
       setError(err.message || "Error al actualizar el perfil");
     } finally {
@@ -229,6 +272,48 @@ export default function Profile() {
                         Modificar información
                       </button>
                     </div>
+                  )}
+
+                  {isEditing && (
+                    <div className="p-4 bg-stone-50 rounded-2xl border border-stone-100 space-y-3 animate-in fade-in slide-in-from-top-4 duration-300">
+                      <p className="text-xs font-bold text-stone-400 uppercase tracking-widest">
+                        ¿Cambiar contraseña?
+                      </p>
+                      <div className="flex gap-6">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="changePassword"
+                            checked={!shouldChangePassword}
+                            onChange={() => setShouldChangePassword(false)}
+                            className="w-4 h-4 accent-[#E2725B]"
+                          />
+                          <span className="text-sm font-bold text-stone-600 group-hover:text-[#E2725B] transition-colors">
+                            No
+                          </span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="changePassword"
+                            checked={shouldChangePassword}
+                            onChange={() => setShouldChangePassword(true)}
+                            className="w-4 h-4 accent-[#E2725B]"
+                          />
+                          <span className="text-sm font-bold text-stone-600 group-hover:text-[#E2725B] transition-colors">
+                            Sí
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {isEditing && shouldChangePassword && (
+                    <ChangePasswordForm
+                      formData={formData}
+                      handleChange={handleChange}
+                      passwordStrength={passwordStrength}
+                    />
                   )}
 
                   {isEditing && (
