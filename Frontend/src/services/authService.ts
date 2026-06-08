@@ -78,3 +78,7 @@ export const registerUser = async (signUpData: {
   const data: AuthApiResponse = await response.json();
   return mapAuthResponse(data);
 };
+
+export const logoutUser = (): void => {
+  localStorage.removeItem("user");
+};
