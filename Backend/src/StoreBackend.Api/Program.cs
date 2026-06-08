@@ -94,6 +94,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserFacade, UserFacade>();
 builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductFacade, ProductFacade>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ICON_STYLE } from "../lib/utils";
 
@@ -23,6 +24,7 @@ const StatItem: React.FC<StatItemProps> = ({ label, value, last = false }) => (
 const Home: React.FC = () => {
   const { user } = useAuth();
   const userName = user?.name || "Usuario";
+  const navigate = useNavigate();
 
 
   return (
@@ -43,6 +45,7 @@ const Home: React.FC = () => {
             </p>
             <div className="flex flex-wrap gap-4 sm:gap-6">
               <button
+                onClick={() => navigate("/products")}
                 className="bg-[#E2725B] text-white px-8 sm:px-12 py-3 font-label-caps text-xs uppercase tracking-widest active:translate-y-0.5 transition-transform font-bold cursor-pointer hover:bg-[#c95d47]"
               >
                 Catalog Access
@@ -63,7 +66,10 @@ const Home: React.FC = () => {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              <div className="md:col-span-8 bg-stone-100 border border-slate-300 border-b-[4px] border-b-stone-800 p-6 sm:p-10 md:p-12 flex flex-col justify-between min-h-[280px] sm:min-h-[340px] md:min-h-[400px] relative overflow-hidden group">
+              <div
+                onClick={() => navigate("/products")}
+                className="md:col-span-8 bg-stone-100 border border-slate-300 border-b-[4px] border-b-stone-800 p-6 sm:p-10 md:p-12 flex flex-col justify-between min-h-[280px] sm:min-h-[340px] md:min-h-[400px] relative overflow-hidden group cursor-pointer"
+              >
                 <img
                   alt="Premium terracotta bricks"
                   className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity"
