@@ -4,6 +4,19 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StoreBackend.Dto\StoreBackend.Dto.csproj" />
+    <ProjectReference Include="..\StoreBackend.Exceptions\StoreBackend.Exceptions.csproj" />
+    <ProjectReference Include="..\StoreBackend.Facade\StoreBackend.Facade.csproj" />
+  </ItemGroup>
 
 </Project>
