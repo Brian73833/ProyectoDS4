@@ -79,6 +79,52 @@ export const registerUser = async (signUpData: {
   return mapAuthResponse(data);
 };
 
+export function getAuthHeader(): Record<string, string> {
+  const user = localStorage.getItem("user");
+  if (!user) return {};
+  try {
+    const parsed: User = JSON.parse(user);
+    return parsed.token ? { Authorization: `Bearer ${parsed.token}` } : {};
+  } catch {
+    return {};
+  }
+}
+
+export const updateUser = async (
+  resourceId: string,
+  updateData: {
+    name: string;
+    email: string;
+  },
+): Promise<User> => {
+  const response = await fetch(`${config.api.url}/api/users/${resourceId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(updateData),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const message = await parseErrorMessage(response);
+    throw new Error(message || "Error al actualizar la información");
+  }
+
+  const updatedUser = await response.json();
+  const currentUser = localStorage.getItem("user");
+  const token = currentUser ? JSON.parse(currentUser).token : "";
+
+  return {
+    userResourceId: updatedUser.userResourceId,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    roles: updatedUser.roles ?? [],
+    token,
+  };
+};
+
 export const logoutUser = (): void => {
   localStorage.removeItem("user");
 };

@@ -58,4 +58,23 @@ public class UserService : IUserService
 
         return await _userRepository.CreateAsync(userEntity);
     }
+
+    public async Task<User> UpdateAsync(Guid userResourceId, UpdateUserDto userDto)
+    {
+        var user = await _userRepository.GetByResourceIdAsync(userResourceId);
+        if (user == null)
+        {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        if (user.Email != userDto.Email && await _userRepository.HasUserByEmailAsync(userDto.Email))
+        {
+            throw new BadRequestResponseException("Email is already taken");
+        }
+
+        user.Name = userDto.Name;
+        user.Email = userDto.Email;
+
+        return await _userRepository.UpdateAsync(user);
+    }
 }
