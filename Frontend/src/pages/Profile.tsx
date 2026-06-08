@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { updateUser } from "../services/authService";
+import { updateUser, deleteUser } from "../services/authService";
 import { getPasswordStrength } from "../lib/utils";
 import ChangePasswordForm from "../components/ChangePasswordForm";
+import DeleteAccountForm from "../components/DeleteAccountForm";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, login, isAdmin } = useAuth();
+  const { user, login, logout, isAdmin } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [shouldChangePassword, setShouldChangePassword] = useState(false);
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -117,6 +122,24 @@ export default function Profile() {
       setError(err.message || "Error al actualizar el perfil");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !deletePassword) return;
+
+    setDeleteLoading(true);
+    setDeleteError(null);
+
+    try {
+      await deleteUser(user.userResourceId, deletePassword);
+      logout();
+      navigate("/");
+    } catch (err: any) {
+      setDeleteError(err.message || "Error al eliminar la cuenta");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -271,6 +294,17 @@ export default function Profile() {
                         </span>
                         Modificar información
                       </button>
+
+                      <DeleteAccountForm
+                        showDeleteForm={showDeleteForm}
+                        setShowDeleteForm={setShowDeleteForm}
+                        deletePassword={deletePassword}
+                        setDeletePassword={setDeletePassword}
+                        handleDeleteAccount={handleDeleteAccount}
+                        deleteLoading={deleteLoading}
+                        deleteError={deleteError}
+                        setDeleteError={setDeleteError}
+                      />
                     </div>
                   )}
 

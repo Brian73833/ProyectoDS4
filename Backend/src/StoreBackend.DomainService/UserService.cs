@@ -92,4 +92,20 @@ public class UserService : IUserService
 
         return await _userRepository.UpdateAsync(user);
     }
+
+    public async Task DeleteAsync(Guid userResourceId, string password)
+    {
+        var user = await _userRepository.GetByResourceIdAsync(userResourceId);
+        if (user == null)
+        {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        {
+            throw new BadRequestResponseException("Incorrect password");
+        }
+
+        await _userRepository.DeleteAsync(user);
+    }
 }

@@ -30,4 +30,17 @@ public class UserController(IUserFacade userFacade) : ControllerBase
         var userModel = UserMapper.ToModel(userDto);
         return Ok(userModel);
     }
+
+    [HttpDelete("{userResourceId}")]
+    public async Task<IActionResult> DeleteUserAsync(Guid userResourceId, [FromBody] DeleteUserRequestModel deleteUserRequestModel)
+    {
+        if (!IsCurrentUser(userResourceId))
+        {
+            return Forbid();
+        }
+
+        await userFacade.DeleteAsync(userResourceId, deleteUserRequestModel.Password);
+
+        return Ok();
+    }
 }

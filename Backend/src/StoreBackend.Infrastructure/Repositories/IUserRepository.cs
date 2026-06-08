@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<User?> GetByResourceIdAsync(Guid userResourceId);
     Task<User> CreateAsync(User user);
     Task<User> UpdateAsync(User user);
+    Task DeleteAsync(User user);
 }

@@ -127,6 +127,26 @@ export const updateUser = async (
   };
 };
 
+export const deleteUser = async (
+  resourceId: string,
+  password: string,
+): Promise<void> => {
+  const response = await fetch(`${config.api.url}/api/users/${resourceId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify({ password }),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const message = await parseErrorMessage(response);
+    throw new Error(message || "Error al eliminar la cuenta");
+  }
+};
+
 export const logoutUser = (): void => {
   localStorage.removeItem("user");
 };
