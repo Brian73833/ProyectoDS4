@@ -3,6 +3,7 @@ import AuthLogin from "./pages/AuthLogin";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Welcome from "./pages/Welcome";
+import ProductDetails from "./pages/ProductDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Route>
       <Route path="*" element={<Navigate to="/welcome" replace />} />
     </Routes>

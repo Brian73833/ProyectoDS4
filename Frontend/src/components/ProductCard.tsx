@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { Product } from "../models/responses/Product";
 import { getImageUrl } from "../services/productService";
 
@@ -6,9 +7,12 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const navigate = useNavigate();
+
   return (
     <div
-      className={`relative bg-surface-container-lowest border border-slate-300 flex flex-col group overflow-hidden
+      onClick={() => navigate(`/product/${product.productResourceId}`)}
+      className={`relative bg-surface-container-lowest border border-slate-300 flex flex-col group overflow-hidden cursor-pointer
         ${product.stock > 0 ? "border-b-[4px] border-b-primary" : "border-b-[4px] border-b-secondary"}`}
     >
       <div className="relative aspect-[4/5] overflow-hidden">

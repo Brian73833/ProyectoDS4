@@ -15,5 +15,13 @@ namespace StoreBackend.Api.Controller
             var productModel = ProductMapper.ToModel(products);
             return Ok(productModel);
         }
+
+        [HttpGet("{productResourceId}")]
+        public async Task<IActionResult> GetProductAsync(Guid productResourceId)
+        {
+            var productDto = await productFacade.GetByResourceIdAsync(productResourceId);
+            var productModel = ProductMapper.ToModel(productDto);
+            return Ok(productModel);
+        }
     }
 }
