@@ -1,26 +1,4 @@
-<<<<<<< Updated upstream
 function App() {
-  return (
-    <>
-      <h1>Vite + React</h1>
-    </>
-  )
-=======
-import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import AuthLogin from "./pages/AuthLogin";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import Welcome from "./pages/Welcome";
-import ProductDetails from "./pages/ProductDetails";
-import Profile from "./pages/Profile";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-
-export default function App() {
-  const location = useLocation();
-  const hideHeaderFooter = ["/auth"].includes(location.pathname);
-
   return (
     <div className="min-h-screen flex flex-col">
       {!hideHeaderFooter && <Header />}
@@ -40,7 +18,4 @@ export default function App() {
       {!hideHeaderFooter && <Footer />}
     </div>
   );
->>>>>>> Stashed changes
 }
-
-export default App
