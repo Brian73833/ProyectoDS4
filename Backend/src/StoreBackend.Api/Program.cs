@@ -9,6 +9,7 @@ using StoreBackend.Facade;
 using StoreBackend.Infrastructure;
 using StoreBackend.Infrastructure.Repositories;
 using StoreBackend.Api.Filters;
+using StoreBackend.Api.Services;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -95,13 +96,11 @@ builder.Services.AddScoped<IUserFacade, UserFacade>();
 builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductFacade, ProductFacade>();
-builder.Services.AddScoped<IProductService, ProductService>();
-
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductFacade, ProductFacade>();
 builder.Services.AddScoped<ICategoryFacade, CategoryFacade>();
-
 builder.Services.AddScoped<IImageService, ImageService>();
 
 var app = builder.Build();
