@@ -35,4 +35,15 @@ public class UserMapper
             Password = model.Password
         };
     }
+
+    public static UpdateUserDto ToDto(UpdateUserRequestModel model)
+    {
+        return new UpdateUserDto
+        {
+            Name = model.Name,
+            Email = model.Email,
+            CurrentPassword = model.CurrentPassword,
+            NewPassword = model.NewPassword
+        };
+    }
 }

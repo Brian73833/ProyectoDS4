@@ -22,4 +22,17 @@ public class UserFacade : IUserFacade
         await _context.SaveChangesAsync();
         return UserMapper.ToDto(createdUser);
     }
+
+    public async Task<UserDto> UpdateAsync(Guid userResourceId, UpdateUserDto userDto)
+    {
+        var updatedUser = await _userService.UpdateAsync(userResourceId, userDto);
+        await _context.SaveChangesAsync();
+        return UserMapper.ToDto(updatedUser);
+    }
+
+    public async Task DeleteAsync(Guid userResourceId, string password)
+    {
+        await _userService.DeleteAsync(userResourceId, password);
+        await _context.SaveChangesAsync();
+    }
 }

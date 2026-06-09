@@ -58,4 +58,54 @@ public class UserService : IUserService
 
         return await _userRepository.CreateAsync(userEntity);
     }
+
+    public async Task<User> UpdateAsync(Guid userResourceId, UpdateUserDto userDto)
+    {
+        var user = await _userRepository.GetByResourceIdAsync(userResourceId);
+        if (user == null)
+        {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        if (user.Email != userDto.Email && await _userRepository.HasUserByEmailAsync(userDto.Email))
+        {
+            throw new BadRequestResponseException("Email is already taken");
+        }
+
+        user.Name = userDto.Name;
+        user.Email = userDto.Email;
+
+        if (!string.IsNullOrEmpty(userDto.NewPassword))
+        {
+            if (string.IsNullOrEmpty(userDto.CurrentPassword))
+            {
+                throw new BadRequestResponseException("Current password is required to change password");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userDto.CurrentPassword, user.PasswordHash))
+            {
+                throw new BadRequestResponseException("Current password is incorrect");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.NewPassword);
+        }
+
+        return await _userRepository.UpdateAsync(user);
+    }
+
+    public async Task DeleteAsync(Guid userResourceId, string password)
+    {
+        var user = await _userRepository.GetByResourceIdAsync(userResourceId);
+        if (user == null)
+        {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        {
+            throw new BadRequestResponseException("Incorrect password");
+        }
+
+        await _userRepository.DeleteAsync(user);
+    }
 }
