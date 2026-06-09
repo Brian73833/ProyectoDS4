@@ -95,9 +95,14 @@ builder.Services.AddScoped<IUserFacade, UserFacade>();
 builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductFacade, ProductFacade>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryFacade, CategoryFacade>();
+
+builder.Services.AddScoped<IImageService, ImageService>();
 
 var app = builder.Build();
 

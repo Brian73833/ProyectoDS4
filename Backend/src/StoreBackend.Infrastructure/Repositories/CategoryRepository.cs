@@ -26,4 +26,10 @@ public class CategoryRepository : ICategoryRepository
     {
         return await _context.Categories.FirstOrDefaultAsync(c => c.CategoryResourceId == categoryResourceId);
     }
+
+    public async Task<Category> AddAsync(Category category)
+    {
+        await _context.Categories.AddAsync(category);
+        return category;
+    }
 }
