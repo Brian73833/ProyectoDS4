@@ -25,9 +25,29 @@ public class UserRepository : IUserRepository
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
 
+    public async Task<User?> GetByResourceIdAsync(Guid userResourceId)
+    {
+        return await _context.Users
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+            .FirstOrDefaultAsync(u => u.UserResourceId == userResourceId);
+    }
+
     public Task<User> CreateAsync(User user)
     {
         _context.Users.Add(user);
         return Task.FromResult(user);
+    }
+
+    public Task<User> UpdateAsync(User user)
+    {
+        _context.Users.Update(user);
+        return Task.FromResult(user);
+    }
+
+    public Task DeleteAsync(User user)
+    {
+        _context.Users.Remove(user);
+        return Task.CompletedTask;
     }
 }
