@@ -6,10 +6,7 @@ import CategoryModal from "../components/CategoryModal";
 import ProductCard from "../components/ProductCard";
 import { useAuth } from "../context/AuthContext";
 import { useProducts } from "../hooks/useProducts";
-<<<<<<< HEAD
 import { ICON_STYLE } from "../lib/utils";
-=======
->>>>>>> 9e25e1fd66e32607826e59af78838a3f959352fa
 import type { Product } from "../models/responses/Product";
 
 const Products: React.FC = () => {
@@ -26,12 +23,8 @@ const Products: React.FC = () => {
     removeProduct,
   } = useProducts();
 
-<<<<<<< HEAD
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-
-=======
->>>>>>> 9e25e1fd66e32607826e59af78838a3f959352fa
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -41,7 +34,6 @@ const Products: React.FC = () => {
     setProductToEdit(product);
     setIsEditModalOpen(true);
   };
-<<<<<<< HEAD
 
   const filtered = products.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
@@ -49,9 +41,6 @@ const Products: React.FC = () => {
       selectedCategory === "" || p.categoryName === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-=======
->>>>>>> 9e25e1fd66e32607826e59af78838a3f959352fa
 
   return (
     <main className="pt-8 pb-16 sm:pb-20 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto bg-background text-on-surface font-body-md min-h-screen flex flex-col">
@@ -124,7 +113,6 @@ const Products: React.FC = () => {
         onCategoryAdded={addCategory}
       />
 
-<<<<<<< HEAD
       <section className="mb-12 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="w-full md:w-1/2 space-y-3">
@@ -171,11 +159,6 @@ const Products: React.FC = () => {
           {filtered.length === products.length
             ? `${products.length} productos`
             : `${filtered.length} de ${products.length} productos`}
-=======
-      <section className="mb-6">
-        <p className="font-body-md text-sm text-stone-500 font-semibold">
-          {products.length} productos disponibles
->>>>>>> 9e25e1fd66e32607826e59af78838a3f959352fa
         </p>
       </section>
 
@@ -194,7 +177,6 @@ const Products: React.FC = () => {
           {error}
         </div>
       ) : products.length > 0 ? (
-<<<<<<< HEAD
         filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filtered.map((p) => (
@@ -211,18 +193,6 @@ const Products: React.FC = () => {
             No se encontraron productos.
           </div>
         )
-=======
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((p) => (
-            <ProductCard
-              key={p.productResourceId}
-              product={p}
-              onEdit={isAdmin ? () => handleEditProduct(p) : undefined}
-              onDelete={isAdmin ? () => removeProduct(p.productResourceId) : undefined}
-            />
-          ))}
-        </div>
->>>>>>> 9e25e1fd66e32607826e59af78838a3f959352fa
       ) : (
         <div className="py-20 text-center text-stone-400 font-body-md text-lg bg-stone-50 border border-slate-200 rounded-2xl p-6">
           <span className="material-symbols-outlined text-4xl mb-2 text-stone-450 block">
