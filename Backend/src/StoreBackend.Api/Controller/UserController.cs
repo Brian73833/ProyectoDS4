@@ -1,46 +1,49 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 using StoreBackend.Api.Mappers;
 using StoreBackend.Api.Models.Requests;
 using StoreBackend.Facade;
 
-namespace StoreBackend.Api.Controller;
-
-[Authorize]
-[Route("api/users")]
-[ApiController]
-public class UserController(IUserFacade userFacade) : ControllerBase
+namespace StoreBackend.Api.Controller
 {
-    private bool IsCurrentUser(Guid userResourceId)
+    [Authorize]
+    [Route("api/users")]
+    [ApiController]
+    public class UserController(IUserFacade userFacade) : ControllerBase
     {
-        var currentUserId = User.FindFirst("externalId")?.Value;
-        return currentUserId == userResourceId.ToString();
-    }
-
-    [HttpPut("{userResourceId}")]
-    public async Task<IActionResult> UpdateUserAsync(Guid userResourceId, [FromBody] UpdateUserRequestModel updateUserRequestModel)
-    {
-        if (!IsCurrentUser(userResourceId))
+        private bool IsCurrentUser(Guid userResourceId)
         {
-            return Forbid();
+            var currentUserId = User.FindFirst("externalId")?.Value;
+            return currentUserId == userResourceId.ToString();
         }
 
-        var updateUserDto = UserMapper.ToDto(updateUserRequestModel);
-        var userDto = await userFacade.UpdateAsync(userResourceId, updateUserDto);
-        var userModel = UserMapper.ToModel(userDto);
-        return Ok(userModel);
-    }
-
-    [HttpDelete("{userResourceId}")]
-    public async Task<IActionResult> DeleteUserAsync(Guid userResourceId, [FromBody] DeleteUserRequestModel deleteUserRequestModel)
-    {
-        if (!IsCurrentUser(userResourceId))
+        [HttpPut("{userResourceId}")]
+        public async Task<IActionResult> UpdateUserAsync(Guid userResourceId, [FromBody] UpdateUserRequestModel updateUserRequestModel)
         {
-            return Forbid();
+            if (!IsCurrentUser(userResourceId))
+            {
+                return Forbid();
+            }
+
+            var updateUserDto = UserMapper.ToDto(updateUserRequestModel);
+            var userDto = await userFacade.UpdateAsync(userResourceId, updateUserDto);
+            var userModel = UserMapper.ToModel(userDto);
+            return Ok(userModel);
         }
 
-        await userFacade.DeleteAsync(userResourceId, deleteUserRequestModel.Password);
+        [HttpDelete("{userResourceId}")]
+        public async Task<IActionResult> DeleteUserAsync(Guid userResourceId, [FromBody] DeleteUserRequestModel deleteUserRequestModel)
+        {
+            if (!IsCurrentUser(userResourceId))
+            {
+                return Forbid();
+            }
 
-        return Ok();
+            await userFacade.DeleteAsync(userResourceId, deleteUserRequestModel.Password);
+
+            return Ok();
+        }
     }
 }
+

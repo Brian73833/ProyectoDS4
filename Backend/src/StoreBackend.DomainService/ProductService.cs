@@ -66,8 +66,7 @@ public class ProductService : IProductService
         product.Description = productDto.Description;
         product.Price = productDto.Price;
         product.Stock = productDto.Stock;
-        product.CategoryId = category.CategoryId;
-        if (productDto.ImagePath != null)
+        product.CategoryId = category.CategoryId;        if (productDto.ImagePath != null)
         {
             product.ImagePath = productDto.ImagePath;
         }

@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import authHero from "../assets/auth-hero.png";
+import authHeroImg from "../assets/auth-hero.png";
 import { useAuth } from "../context/AuthContext";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 
 const AuthLogin: React.FC = () => {
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (!isLoading && isLoggedIn) {
       navigate("/");
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, isLoading, navigate]);
+
+  if (isLoading) {
+    return null;
+  }
 
   const handleAuthSuccess = () => {
     navigate("/");
@@ -24,7 +28,7 @@ const AuthLogin: React.FC = () => {
     <div className="min-h-screen w-full flex bg-[#FDFCFB]">
       <div className="hidden lg:block lg:w-1/2 relative h-screen sticky top-0 overflow-hidden">
         <img
-          src={authHero}
+          src={authHeroImg}
           alt="Auth Hero"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -41,7 +45,7 @@ const AuthLogin: React.FC = () => {
             </span>
           </div>
           <div className="max-w-xl text-left">
-            <h1 className="text-4xl font-extrabold leading-tight mb-6 font-headline-xl">
+            <h1 className="text-4xl font-extrabold leading-tight mb-6">
               Descubre un mundo de exclusividad.
             </h1>
             <p className="text-base text-white/90 font-medium leading-relaxed">
@@ -55,7 +59,7 @@ const AuthLogin: React.FC = () => {
         <div className="w-full max-w-[480px]">
           <button
             onClick={() => navigate("/welcome")}
-            className="flex items-center gap-2 text-stone-500 hover:text-[#E2725B] transition-colors mb-8 group cursor-pointer"
+            className="flex items-center gap-2 text-stone-500 hover:text-[#E2725B] transition-colors mb-8 group"
           >
             <span className="material-symbols-outlined transition-transform group-hover:-translate-x-1">
               arrow_back
@@ -88,29 +92,28 @@ const AuthLogin: React.FC = () => {
           </div>
           <div className="flex p-1 bg-stone-100 rounded-2xl mb-10 relative">
             <button
+              data-cy="tab-login"
               onClick={() => setActiveTab("login")}
-              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 cursor-pointer ${
-                activeTab === "login"
+              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 ${activeTab === "login"
                   ? "text-stone-900"
                   : "text-stone-500 hover:text-stone-700"
-              }`}
+                }`}
             >
               Iniciar Sesión
             </button>
             <button
+              data-cy="tab-register"
               onClick={() => setActiveTab("register")}
-              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 cursor-pointer ${
-                activeTab === "register"
+              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 ${activeTab === "register"
                   ? "text-stone-900"
                   : "text-stone-500 hover:text-stone-700"
-              }`}
+                }`}
             >
               Registrarse
             </button>
             <div
-              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-xl shadow-sm transition-all duration-300 ease-out ${
-                activeTab === "login" ? "left-1" : "left-[calc(50%+2px)]"
-              }`}
+              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-xl shadow-sm transition-all duration-300 ease-out ${activeTab === "login" ? "left-1" : "left-[calc(50%+2px)]"
+                }`}
             />
           </div>
 

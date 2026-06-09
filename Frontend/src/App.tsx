@@ -1,17 +1,22 @@
+import { useEffect } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import AuthLogin from "./pages/AuthLogin";
 import Home from "./pages/Home";
-import Products from "./pages/Products";
 import Welcome from "./pages/Welcome";
+import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Profile from "./pages/Profile";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   const location = useLocation();
   const hideHeaderFooter = ["/auth"].includes(location.pathname);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col">

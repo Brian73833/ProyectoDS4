@@ -125,8 +125,7 @@ export default function Profile() {
     }
   };
 
-  const handleDeleteAccount = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDeleteAccount = async () => {
     if (!user || !deletePassword) return;
 
     setDeleteLoading(true);
@@ -227,16 +226,16 @@ export default function Profile() {
                         person
                       </span>
                       <input
+                        data-cy="profile-name"
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                         disabled={!isEditing}
-                        className={`w-full pl-12 pr-4 py-4 border rounded-2xl outline-none transition-all duration-300 font-medium ${
-                          isEditing
-                            ? "bg-stone-50 border-stone-200 focus:ring-4 focus:ring-[#E2725B]/5 focus:border-[#E2725B] text-stone-700"
-                            : "bg-stone-100/50 border-transparent text-stone-500 cursor-not-allowed"
-                        }`}
+                        className={`w-full pl-12 pr-4 py-4 border rounded-2xl outline-none transition-all duration-300 font-medium ${isEditing
+                          ? "bg-stone-50 border-stone-200 focus:ring-4 focus:ring-[#E2725B]/5 focus:border-[#E2725B] text-stone-700"
+                          : "bg-stone-100/50 border-transparent text-stone-500 cursor-not-allowed"
+                          }`}
                         placeholder="Tu nombre"
                         required
                       />
@@ -252,16 +251,16 @@ export default function Profile() {
                         mail
                       </span>
                       <input
+                        data-cy="profile-email"
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                         disabled={!isEditing}
-                        className={`w-full pl-12 pr-4 py-4 border rounded-2xl outline-none transition-all duration-300 font-medium ${
-                          isEditing
-                            ? "bg-stone-50 border-stone-200 focus:ring-4 focus:ring-[#E2725B]/5 focus:border-[#E2725B] text-stone-700"
-                            : "bg-stone-100/50 border-transparent text-stone-500 cursor-not-allowed"
-                        }`}
+                        className={`w-full pl-12 pr-4 py-4 border rounded-2xl outline-none transition-all duration-300 font-medium ${isEditing
+                          ? "bg-stone-50 border-stone-200 focus:ring-4 focus:ring-[#E2725B]/5 focus:border-[#E2725B] text-stone-700"
+                          : "bg-stone-100/50 border-transparent text-stone-500 cursor-not-allowed"
+                          }`}
                         placeholder="tu@email.com"
                         required
                       />
@@ -285,6 +284,7 @@ export default function Profile() {
                   {!isEditing && (
                     <div className="flex flex-col gap-4 animate-in fade-in duration-300 h-full justify-center">
                       <button
+                        data-cy="profile-edit-btn"
                         type="submit"
                         disabled={loading}
                         className="w-full group relative flex items-center justify-center gap-3 px-10 py-4 font-bold rounded-2xl active:scale-[0.98] disabled:opacity-50 transition-all duration-300 shadow-xl bg-[#E2725B] text-white hover:bg-[#c95d47] shadow-[#E2725B]/20"
@@ -328,6 +328,7 @@ export default function Profile() {
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer group">
                           <input
+                            data-cy="profile-change-password-yes"
                             type="radio"
                             name="changePassword"
                             checked={shouldChangePassword}
@@ -360,6 +361,7 @@ export default function Profile() {
                         Volver
                       </button>
                       <button
+                        data-cy="profile-save-btn"
                         type="submit"
                         disabled={loading}
                         className="flex-[2] group relative flex items-center justify-center gap-3 px-8 py-4 font-bold rounded-2xl active:scale-[0.98] disabled:opacity-50 transition-all duration-300 shadow-xl bg-stone-900 text-white hover:bg-stone-800 shadow-stone-900/10"
@@ -388,14 +390,14 @@ export default function Profile() {
             {(error || success) && (
               <div className="min-h-[60px] animate-in fade-in slide-in-from-top-2 duration-300">
                 {error && (
-                  <div className="flex items-center gap-4 p-5 bg-red-50 border border-red-100 text-red-600 rounded-[1.5rem]">
+                  <div data-cy="profile-error-message" className="flex items-center gap-4 p-5 bg-red-50 border border-red-100 text-red-600 rounded-[1.5rem]">
                     <span className="material-symbols-outlined">error</span>
                     <p className="text-sm font-bold">{error}</p>
                   </div>
                 )}
 
                 {success && (
-                  <div className="flex items-center gap-4 p-5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-[1.5rem]">
+                  <div data-cy="profile-success-message" className="flex items-center gap-4 p-5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-[1.5rem]">
                     <span className="material-symbols-outlined">
                       check_circle
                     </span>

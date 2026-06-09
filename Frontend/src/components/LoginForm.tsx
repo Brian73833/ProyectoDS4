@@ -71,16 +71,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
     }
   };
 
-  const inputClass = (hasError: boolean) =>
-    `w-full pl-12 pr-4 py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${hasError
-      ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
-      : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
-    }`;
-
-  const inputClassPassword = (hasError: boolean) =>
-    `w-full pl-12 pr-12 py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${hasError
-      ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
-      : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
+  const inputClass = (hasError: boolean, withRightPadding = false) =>
+    `w-full pl-12 ${withRightPadding ? "pr-12" : "pr-4"} py-4 bg-stone-50 border-2 rounded-2xl focus:bg-white focus:ring-4 outline-none transition-all font-medium text-stone-800 placeholder:text-stone-300 ${
+      hasError
+        ? "border-red-400 focus:border-red-500 focus:ring-red-500/10"
+        : "border-stone-100 focus:border-[#E2725B] focus:ring-[#E2725B]/5"
     }`;
 
   return (
@@ -96,6 +91,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
             mail
           </span>
           <input
+            data-cy="login-email"
             name="email"
             type="email"
             value={formData.email}
@@ -118,11 +114,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
             lock
           </span>
           <input
+            data-cy="login-password"
             name="password"
             type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={handleChange}
-            className={inputClassPassword(!!errors.password)}
+            className={inputClass(!!errors.password, true)}
             placeholder="••••••••"
           />
           <button
@@ -148,6 +145,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       )}
 
       <button
+        data-cy="login-submit"
         type="submit"
         disabled={loading}
         className="w-full py-4 bg-[#E2725B] hover:bg-[#c95d47] disabled:opacity-60 text-white font-extrabold rounded-2xl shadow-xl transition-all active:scale-[0.98] uppercase tracking-widest text-sm flex items-center justify-center gap-2"

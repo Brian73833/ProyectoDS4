@@ -4,19 +4,18 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using StoreBackend.Api.Services;
 using StoreBackend.DomainService;
 using StoreBackend.Facade;
 using StoreBackend.Infrastructure;
 using StoreBackend.Infrastructure.Repositories;
 using StoreBackend.Api.Filters;
-using StoreBackend.Api.Services;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
     WebRootPath = "Images"
 });
-
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<MessageExceptionFilter>();
@@ -46,19 +45,40 @@ builder.Services.AddCors(options =>
     });
 });
 
+var permitLimit = builder.Configuration
+ .GetValue<int>("RateLimiting:PermitLimit");
+
+var windowSeconds = builder.Configuration
+ .GetValue<int>("RateLimiting:WindowSeconds");
+
+var queueLimit = builder.Configuration
+ .GetValue<int>("RateLimiting:QueueLimit");
+
+
 builder.Services.AddRateLimiter(options =>
 {
+    options.AddFixedWindowLimiter("fixed", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = permitLimit;
+        limiterOptions.Window = TimeSpan.FromSeconds(windowSeconds);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = queueLimit;
+    });
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    options.AddPolicy("AuthPolicy", context =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? context.Request.Headers.Host.ToString(),
-            factory: partition => new FixedWindowRateLimiterOptions
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+
+        await context.HttpContext.Response.WriteAsync(
+            """
             {
-                AutoReplenishment = true,
-                PermitLimit = 5,
-                QueueLimit = 0,
-                Window = TimeSpan.FromMinutes(1)
-            }));
+                "status": 429,
+                "message": "Demasiadas solicitudes, intenta mas tarde"
+            }
+            """,
+            cancellationToken: token);
+    };
 });
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -88,23 +108,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserFacade, UserFacade>();
-builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
-
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductFacade, ProductFacade>();
+builder.Services.AddScoped<IUserFacade, UserFacade>();
 builder.Services.AddScoped<ICategoryFacade, CategoryFacade>();
+builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -114,13 +131,14 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseRateLimiter();
-
 app.UseCors("SecurePolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseRateLimiter();
+
+app.MapControllers()
+    .RequireRateLimiting("fixed");
 
 app.Run();

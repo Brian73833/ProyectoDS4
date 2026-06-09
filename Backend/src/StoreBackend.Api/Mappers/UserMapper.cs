@@ -17,20 +17,20 @@ public class UserMapper
         };
     }
 
-    public static CreateUserDto ToDto(CreateUserRequestModel model)
+    public static LoginUserDto ToDto(LoginRequestModel model)
     {
-        return new CreateUserDto
+        return new LoginUserDto
         {
-            Name = model.Name,
             Email = model.Email,
             Password = model.Password
         };
     }
 
-    public static LoginUserDto ToDto(LoginRequestModel model)
+    public static CreateUserDto ToDto(CreateUserRequestModel model)
     {
-        return new LoginUserDto
+        return new CreateUserDto
         {
+            Name = model.Name,
             Email = model.Email,
             Password = model.Password
         };

@@ -23,7 +23,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {

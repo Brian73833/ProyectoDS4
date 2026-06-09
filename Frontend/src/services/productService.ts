@@ -47,7 +47,10 @@ export async function deleteProduct(id: string): Promise<void> {
   }
 }
 
-export async function updateProduct(id: string, product: FormData): Promise<Product> {
+export async function updateProduct(
+  id: string,
+  product: FormData,
+): Promise<Product> {
   const response = await fetch(`${config.api.url}/api/products/${id}`, {
     method: "PUT",
     headers: { ...getAuthHeader() },

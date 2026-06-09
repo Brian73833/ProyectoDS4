@@ -37,3 +37,4 @@ public class CategoryController(ICategoryFacade categoryFacade) : ControllerBase
         return CreatedAtAction(nameof(GetCategoryAsync), new { categoryResourceId = categoryModel.CategoryResourceId }, categoryModel);
     }
 }
+

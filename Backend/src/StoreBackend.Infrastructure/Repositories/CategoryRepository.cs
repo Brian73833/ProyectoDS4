@@ -32,4 +32,5 @@ public class CategoryRepository : ICategoryRepository
         await _context.Categories.AddAsync(category);
         return category;
     }
+
 }

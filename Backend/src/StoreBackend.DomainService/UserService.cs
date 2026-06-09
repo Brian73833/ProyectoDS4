@@ -66,7 +66,6 @@ public class UserService : IUserService
         {
             throw new ResourceNotFoundException("User not found");
         }
-
         if (user.Email != userDto.Email && await _userRepository.HasUserByEmailAsync(userDto.Email))
         {
             throw new BadRequestResponseException("Email is already taken");
@@ -74,7 +73,6 @@ public class UserService : IUserService
 
         user.Name = userDto.Name;
         user.Email = userDto.Email;
-
         if (!string.IsNullOrEmpty(userDto.NewPassword))
         {
             if (string.IsNullOrEmpty(userDto.CurrentPassword))

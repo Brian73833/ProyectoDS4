@@ -12,7 +12,7 @@ namespace StoreBackend.Api.Controller;
 [ApiController]
 public class AuthorizationController(IUserFacade userFacade, IAuthorizationFacade authorizationFacade) : ControllerBase
 {
-    [EnableRateLimiting("AuthPolicy")]
+    [EnableRateLimiting("fixed")]
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequestModel)
     {
@@ -27,13 +27,12 @@ public class AuthorizationController(IUserFacade userFacade, IAuthorizationFacad
         });
     }
 
-    [EnableRateLimiting("AuthPolicy")]
+    [EnableRateLimiting("fixed")]
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] CreateUserRequestModel createUserRequestModel)
     {
         var createUserDto = UserMapper.ToDto(createUserRequestModel);
         var userDto = await userFacade.CreateAsync(createUserDto);
-        
         var loginDto = new LoginUserDto
         {
             Email = userDto.Email,

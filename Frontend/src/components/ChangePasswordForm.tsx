@@ -1,10 +1,16 @@
 import React from "react";
 import PasswordStrengthBar from "./PasswordStrengthBar";
+import PasswordRequirements from "./PasswordRequirements";
+import type { PasswordStrength } from "../lib/utils";
 
 interface ChangePasswordFormProps {
-  formData: any;
+  formData: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  passwordStrength: any;
+  passwordStrength: PasswordStrength;
 }
 
 const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
@@ -23,6 +29,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
             password
           </span>
           <input
+            data-cy="profile-current-password"
             type="password"
             name="currentPassword"
             value={formData.currentPassword}
@@ -42,6 +49,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
             lock_reset
           </span>
           <input
+            data-cy="profile-new-password"
             type="password"
             name="newPassword"
             value={formData.newPassword}
@@ -56,32 +64,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
         )}
 
         {formData.newPassword && (
-          <ul className="mt-2 space-y-0.5 ml-1">
-            {[
-              { regex: /.{8,}/, text: "Mínimo 8 caracteres" },
-              { regex: /[A-Z]/, text: "Una letra mayúscula" },
-              { regex: /[a-z]/, text: "Una letra minúscula" },
-              { regex: /\d/, text: "Un número" },
-              {
-                regex: /[\W_]/,
-                text: "Un carácter especial (!@#$…)",
-              },
-            ].map(({ regex, text }) => {
-              const met = regex.test(formData.newPassword);
-              return (
-                <li
-                  key={text}
-                  className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${met ? "text-green-600" : "text-stone-400"
-                    }`}
-                >
-                  <span className="material-symbols-outlined text-sm leading-none">
-                    {met ? "check_circle" : "radio_button_unchecked"}
-                  </span>
-                  {text}
-                </li>
-              );
-            })}
-          </ul>
+          <PasswordRequirements password={formData.newPassword} />
         )}
       </div>
 
@@ -94,6 +77,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
             verified
           </span>
           <input
+            data-cy="profile-confirm-password"
             type="password"
             name="confirmPassword"
             value={formData.confirmPassword}

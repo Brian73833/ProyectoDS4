@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Product } from "../models/responses/Product";
-import type { Category } from "../models/responses/Category"; 
+import type { Category } from "../models/responses/Category";
 import { getProducts } from "../services/productService";
 import { getCategories } from "../services/categoryService";
 
@@ -20,7 +20,6 @@ export function useProducts(): UseProductsResult {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,21 +44,28 @@ export function useProducts(): UseProductsResult {
 
   const addProduct = (product: Product) =>
     setProducts((prev) => [product, ...prev]);
-
   const addCategory = (category: Category) =>
     setCategories((prev) => [...prev, category]);
-
   const updateProduct = (product: Product) =>
     setProducts((prev) =>
       prev.map((p) =>
-        p.productResourceId === product.productResourceId ? product : p
-      )
+        p.productResourceId === product.productResourceId ? product : p,
+      ),
     );
 
   const removeProduct = (productResourceId: string) =>
     setProducts((prev) =>
-      prev.filter((p) => p.productResourceId !== productResourceId)
+      prev.filter((p) => p.productResourceId !== productResourceId),
     );
 
-  return { products, categories, loading, error, addProduct, addCategory, updateProduct, removeProduct };
+  return {
+    products,
+    categories,
+    loading,
+    error,
+    addProduct,
+    addCategory,
+    updateProduct,
+    removeProduct,
+  };
 }

@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
   const { isLoggedIn, isLoading } = useAuth();
 
   if (isLoading) {
-    return null; 
+    return null;
   }
 
   if (!isLoggedIn) {

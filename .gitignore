@@ -5,6 +5,7 @@ Thumbs.db
 *.log
 .env
 .env.*
+!.env.example
 
 # --- Frontend (Node.js / React / Vite) ---
 Frontend/node_modules/
@@ -43,8 +44,83 @@ Backend/**/*.userosscache
 Backend/**/*.sln.docstates
 Backend/**/*.suo
 
-# Database
-*.db
-*.sqlite
-Backend/**/appsettings.Development.json
+# --- IntelliJ / Android Studio ---
+.idea/
+*.iml
 
+# --- Android (Capacitor — Frontend/android/) ---
+
+# Built application files
+Frontend/android/**/*.apk
+Frontend/android/**/*.aar
+Frontend/android/**/*.ap_
+Frontend/android/**/*.aab
+
+# ART/Dalvik VM
+Frontend/android/**/*.dex
+
+# Java class files
+Frontend/android/**/*.class
+
+# Generated files
+Frontend/android/bin/
+Frontend/android/gen/
+Frontend/android/out/
+
+# Gradle
+Frontend/android/.gradle/
+Frontend/android/build/
+Frontend/android/**/build/
+
+# Local configuration (ruta del SDK, etc.)
+Frontend/android/local.properties
+
+# Proguard
+Frontend/android/proguard/
+
+# Android Studio — navegación y capturas
+Frontend/android/.navigation/
+Frontend/android/captures/
+
+# External native build
+Frontend/android/.externalNativeBuild/
+Frontend/android/.cxx/
+
+# Keystore (descomentar si no se quieren versionar)
+# Frontend/android/**/*.jks
+# Frontend/android/**/*.keystore
+
+# Google Services (descomentar si se usa Firebase)
+# Frontend/android/app/google-services.json
+
+# Freeline
+Frontend/android/freeline.py
+Frontend/android/freeline/
+Frontend/android/freeline_project_description.json
+
+# fastlane
+Frontend/android/fastlane/report.xml
+Frontend/android/fastlane/Preview.html
+Frontend/android/fastlane/screenshots
+Frontend/android/fastlane/test_output
+Frontend/android/fastlane/readme.md
+
+# Version control metadata
+Frontend/android/vcs.xml
+
+# lint
+Frontend/android/lint/intermediates/
+Frontend/android/lint/generated/
+Frontend/android/lint/outputs/
+Frontend/android/lint/tmp/
+# Frontend/android/lint/reports/
+
+# Android Profiling
+Frontend/android/**/*.hprof
+
+# Capacitor / Cordova — archivos generados automáticamente
+Frontend/android/capacitor-cordova-android-plugins/
+Frontend/android/app/src/main/assets/public
+Frontend/android/app/src/main/assets/capacitor.config.json
+Frontend/android/app/src/main/assets/capacitor.plugins.json
+Frontend/android/app/src/main/res/xml/config.xml

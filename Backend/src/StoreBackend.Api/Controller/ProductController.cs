@@ -65,17 +65,13 @@ namespace StoreBackend.Api.Controller
             var productDto = ProductMapper.ToDto(productRequest);
 
             if (productRequest.ImageFile != null)
-            {
-                var existingProduct = await productFacade.GetByResourceIdAsync(productResourceId);
-                productDto.ImagePath = await imageService.SaveImageAsync(productRequest.ImageFile, "products");
-                if (!string.IsNullOrEmpty(existingProduct.ImagePath))
+            {                var existingProduct = await productFacade.GetByResourceIdAsync(productResourceId);                productDto.ImagePath = await imageService.SaveImageAsync(productRequest.ImageFile, "products");                if (!string.IsNullOrEmpty(existingProduct.ImagePath))
                 {
                     imageService.DeleteImage(existingProduct.ImagePath);
                 }
             }
             else
-            {
-                productDto.ImagePath = null;
+            {                productDto.ImagePath = null;
             }
 
             var updatedProduct = await productFacade.UpdateAsync(productResourceId, productDto);
@@ -84,3 +80,4 @@ namespace StoreBackend.Api.Controller
         }
     }
 }
+
