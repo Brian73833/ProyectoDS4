@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     Args = args,
     WebRootPath = "Images"
 });
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<MessageExceptionFilter>();
@@ -46,14 +47,13 @@ builder.Services.AddCors(options =>
 });
 
 var permitLimit = builder.Configuration
- .GetValue<int>("RateLimiting:PermitLimit");
+    .GetValue<int>("RateLimiting:PermitLimit");
 
 var windowSeconds = builder.Configuration
- .GetValue<int>("RateLimiting:WindowSeconds");
+    .GetValue<int>("RateLimiting:WindowSeconds");
 
 var queueLimit = builder.Configuration
- .GetValue<int>("RateLimiting:QueueLimit");
-
+    .GetValue<int>("RateLimiting:QueueLimit");
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -105,38 +105,52 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }
     )
 );
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IProductFacade, ProductFacade>();
+
 builder.Services.AddScoped<IUserFacade, UserFacade>();
+builder.Services.AddScoped<IProductFacade, ProductFacade>();
 builder.Services.AddScoped<ICategoryFacade, CategoryFacade>();
 builder.Services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+
+
+
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseCors("SecurePolicy");
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseCors("SecurePolicy");
 
 app.UseRateLimiter();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers()
     .RequireRateLimiting("fixed");
