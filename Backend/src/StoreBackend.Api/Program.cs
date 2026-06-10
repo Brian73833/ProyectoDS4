@@ -140,6 +140,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors("SecurePolicy");
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
