@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import welcomeHeroImg from "../assets/img/welcome_hero.png";
+import welcomeHeroImg from "../assets/welcome-hero.png";
 
 const Welcome: React.FC = () => {
   const navigate = useNavigate();
