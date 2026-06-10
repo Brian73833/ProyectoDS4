@@ -127,13 +127,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors("SecurePolicy");
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseCors("SecurePolicy");
-
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseRateLimiter();
