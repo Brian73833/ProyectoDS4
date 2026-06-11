@@ -1,5 +1,8 @@
-using Microsoft.AspNetCore.Hosting;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using StoreBackend.Exceptions;
 using System;
 using System.IO;
@@ -10,11 +13,15 @@ namespace StoreBackend.Api.Services;
 
 public class ImageService : IImageService
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly string _connectionString;
+    private readonly ILogger<ImageService> _logger;
+    private const string ContainerName = "productos";
 
-    public ImageService(IWebHostEnvironment webHostEnvironment)
+    public ImageService(IConfiguration configuration, ILogger<ImageService> logger)
     {
-        _webHostEnvironment = webHostEnvironment;
+        _connectionString = configuration.GetConnectionString("AzureBlobStorage")
+            ?? throw new InvalidOperationException("La cadena de conexión 'AzureBlobStorage' no está configurada.");
+        _logger = logger;
     }
 
     public async Task<string> SaveImageAsync(IFormFile imageFile, string subFolder)
@@ -24,7 +31,7 @@ public class ImageService : IImageService
             throw new BadRequestResponseException("El archivo de imagen no puede superar los 5MB.");
         }
 
-        var allowedExtensions = new[] { ".jpg", ".png" };
+        var allowedExtensions = new[] { ".jpg", ".png", ".jpeg" };
         var extension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
         if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
         {
@@ -37,32 +44,56 @@ public class ImageService : IImageService
             throw new BadRequestResponseException("El Content-Type del archivo no es válido.");
         }
 
-        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", subFolder);
-        
-        if (!Directory.Exists(uploadsFolder))
+        var blobServiceClient = new BlobServiceClient(_connectionString);
+        var blobContainerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+
+        try
         {
-            Directory.CreateDirectory(uploadsFolder);
+            await blobContainerClient.CreateIfNotExistsAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "No se pudo asegurar la creación del contenedor '{ContainerName}'. Si ya existe, este error puede ignorarse.", ContainerName);
         }
 
-        string uniqueFileName = Guid.NewGuid().ToString() + extension;
-        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        string uniqueFileName = $"{subFolder}/{Guid.NewGuid()}{extension}";
+        var blobClient = blobContainerClient.GetBlobClient(uniqueFileName);
 
-        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        using (var stream = imageFile.OpenReadStream())
         {
-            await imageFile.CopyToAsync(fileStream);
+            var uploadOptions = new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = imageFile.ContentType }
+            };
+            await blobClient.UploadAsync(stream, uploadOptions);
         }
 
-        return Path.Combine("uploads", subFolder, uniqueFileName).Replace("\\", "/");
+        return blobClient.Uri.ToString();
     }
 
     public void DeleteImage(string imagePath)
     {
         if (string.IsNullOrEmpty(imagePath)) return;
 
-        string absolutePath = Path.Combine(_webHostEnvironment.WebRootPath, imagePath);
-        if (File.Exists(absolutePath))
+        try
         {
-            File.Delete(absolutePath);
+            var uri = new Uri(imagePath);
+            string containerSegment = $"/{ContainerName}/";
+            int index = uri.AbsolutePath.IndexOf(containerSegment, StringComparison.OrdinalIgnoreCase);
+            
+            if (index >= 0)
+            {
+                string blobName = uri.AbsolutePath.Substring(index + containerSegment.Length);
+                var blobServiceClient = new BlobServiceClient(_connectionString);
+                var blobContainerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+                var blobClient = blobContainerClient.GetBlobClient(Uri.UnescapeDataString(blobName));
+                
+                blobClient.DeleteIfExists();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "No se pudo eliminar el blob en la ruta '{ImagePath}'. Es posible que el archivo ya no exista.", imagePath);
         }
     }
 }
