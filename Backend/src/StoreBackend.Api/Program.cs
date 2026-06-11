@@ -127,8 +127,6 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
-
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -136,13 +134,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("SecurePolicy");
-
 app.UseHttpsRedirection();
-
-app.UseCors("SecurePolicy");
-
-app.UseRateLimiter();
 
 app.UseCors("SecurePolicy");
 
