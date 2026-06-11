@@ -144,6 +144,10 @@ app.UseCors("SecurePolicy");
 
 app.UseRateLimiter();
 
+app.UseCors("SecurePolicy");
+
+app.UseRateLimiter();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
