@@ -11,11 +11,7 @@ using StoreBackend.Infrastructure;
 using StoreBackend.Infrastructure.Repositories;
 using StoreBackend.Api.Filters;
 
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-{
-    Args = args,
-    WebRootPath = "Images"
-});
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
@@ -131,8 +127,6 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
-
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -140,11 +134,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("SecurePolicy");
-
 app.UseHttpsRedirection();
-
-app.UseStaticFiles();
 
 app.UseCors("SecurePolicy");
 
