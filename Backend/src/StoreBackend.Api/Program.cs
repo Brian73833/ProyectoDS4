@@ -11,11 +11,7 @@ using StoreBackend.Infrastructure;
 using StoreBackend.Infrastructure.Repositories;
 using StoreBackend.Api.Filters;
 
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-{
-    Args = args,
-    WebRootPath = "Images"
-});
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
@@ -144,7 +140,9 @@ app.UseCors("SecurePolicy");
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
+app.UseCors("SecurePolicy");
+
+app.UseRateLimiter();
 
 app.UseCors("SecurePolicy");
 
