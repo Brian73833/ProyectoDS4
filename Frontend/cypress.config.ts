@@ -5,7 +5,7 @@ export default defineConfig({
   defaultCommandTimeout: 10000,
 
   e2e: {
-    baseUrl: "http://localhost:5173",
+    baseUrl: "https://proyecto-ds-4.vercel.app",
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
