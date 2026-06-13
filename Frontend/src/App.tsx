@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import AuthLogin from "./pages/AuthLogin";
 import Home from "./pages/Home";
 import Welcome from "./pages/Welcome";
@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   const location = useLocation();
@@ -31,7 +32,7 @@ export default function App() {
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
-          <Route path="*" element={<Navigate to="/welcome" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       {!hideHeaderFooter && <Footer />}
