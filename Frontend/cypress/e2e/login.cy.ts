@@ -3,7 +3,7 @@ describe("Login E2E Tests", () => {
     cy.visit("/auth");
   });
 
-  it("Almacenar datos del usuario para persistencia", () => {
+  it("should store user data for persistence", () => {
     cy.get('[data-cy="login-email"]').type("admin@gmail.com");
     cy.get('[data-cy="login-password"]').type("Admin123*");
     cy.get('[data-cy="login-submit"]').click();
@@ -13,7 +13,7 @@ describe("Login E2E Tests", () => {
     cy.window().its("localStorage").invoke("getItem", "user").should("not.be.null");
   });
 
-  it("Verificar que el formulario de login funcione correctamente", () => {
+  it("should verify the login form works correctly", () => {
     cy.get('[data-cy="login-email"]').type("admin@gmail.com");
     cy.get('[data-cy="login-password"]').type("Admin123*");
     cy.get('[data-cy="login-submit"]').click();

@@ -8,7 +8,7 @@ describe("Products Catalog E2E Tests", () => {
     cy.visit("/products");
   });
 
-  it("Mostrar la lista de productos", () => {
+  it("should display the product list", () => {
     cy.get('[data-cy="products-grid"]')
       .find('[data-cy="product-card"]')
       .should("have.length.at.least", 1)
