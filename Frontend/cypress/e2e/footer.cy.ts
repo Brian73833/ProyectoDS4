@@ -1,10 +1,10 @@
 describe("Footer E2E Tests", () => {
-  it("No debe renderizar el footer en la página de login/registro", () => {
+  it("should not render the footer on the login/register page", () => {
     cy.visit("/auth");
     cy.get("footer").should("not.exist");
   });
 
-  it("El footer debe ser responsivo y visualizarse correctamente en diferentes pantallas", () => {
+  it("should display the footer correctly on different screen sizes", () => {
     cy.visit("/welcome");
 
     cy.viewport(1280, 800);

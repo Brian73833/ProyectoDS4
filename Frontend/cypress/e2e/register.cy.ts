@@ -4,7 +4,7 @@ describe("Register E2E Tests", () => {
     cy.get('[data-cy="tab-register"]').click();
   });
 
-  it("Validar el formato de email y fortaleza de contraseñas", () => {
+  it("should validate email format and password strength", () => {
     cy.get('[data-cy="register-name"]').type("TestUser");
     cy.get('[data-cy="register-email"]').type("invalidemail");
     cy.get('[data-cy="register-password"]').type("123");
@@ -15,7 +15,7 @@ describe("Register E2E Tests", () => {
     cy.contains("Debe ser más robusta.").should("be.visible");
   });
 
-  it("Verificar que el formulario de registro funcione correctamente", () => {
+  it("should verify the registration form works correctly", () => {
     const uniqueEmail = `testuser_${Date.now()}@gmail.com`;
     cy.get('[data-cy="register-name"]').type("TestUser");
     cy.get('[data-cy="register-email"]').type(uniqueEmail);

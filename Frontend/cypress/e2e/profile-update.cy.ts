@@ -25,10 +25,14 @@ describe("Profile Update E2E Tests", () => {
     cy.get('[data-cy="profile-edit-btn"]').click();
 
     cy.get('[data-cy="profile-name"]').clear().type("UpdatedUser");
-    cy.get('[data-cy="profile-email"]').clear().type("updateduser@gmail.com");
+    cy.get('[data-cy="profile-email"]')
+      .clear()
+      .type(`updateduser_${Date.now()}@gmail.com`);
 
     cy.get('[data-cy="profile-save-btn"]').click();
 
-    cy.get('[data-cy="profile-success-message"]').should("be.visible").and("contain.text", "Información actualizada correctamente");
+    cy.get('[data-cy="profile-success-message"]')
+      .should("be.visible")
+      .and("contain.text", "Información actualizada correctamente");
   });
 });
